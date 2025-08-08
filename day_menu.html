@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>menu</title>
+    <style>
+        :root {
+            --primary: #8b5a2b;
+            --secondary: #f8f1e5;
+            --accent: #d4a76a;
+            --text: #333333;
+            --light: #ffffff;
+            --shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--secondary);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: var(--primary);
+            color: var(--light);
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: var(--shadow);
+            position: relative;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .date {
+            font-style: italic;
+            margin-bottom: 1rem;
+        }
+
+        .hero {
+            height: 300px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .hero img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .hero-text {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+            color: white;
+            padding: 1.5rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+
+        .menu-category {
+            margin-bottom: 3rem;
+            background: var(--light);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .category-header {
+            background-color: var(--primary);
+            color: var(--light);
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .category-header h2 {
+            font-size: 1.5rem;
+        }
+
+        .category-icon {
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .category-content {
+            max-height: 1000px;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+        }
+
+        .category-content.collapsed {
+            max-height: 0;
+        }
+
+        .menu-item {
+            display: flex;
+            padding: 1.5rem;
+            border-bottom: 1px solid #eee;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .menu-item:last-child {
+            border-bottom: none;
+        }
+
+        .item-image {
+            width: 100px;
+            height: 100px;
+            min-width: 100px;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .item-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .menu-item:hover .item-image img {
+            transform: scale(1.05);
+        }
+
+        .item-details {
+            flex: 1;
+        }
+
+        .item-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            align-items: center;
+        }
+
+        .item-name {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .item-price {
+            color: var(--primary);
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .item-description {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .item-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .tag {
+            background-color: var(--accent);
+            color: var(--light);
+            padding: 0.2rem 0.5rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .special {
+            position: relative;
+        }
+
+        .special-badge {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background-color: #e74c3c;
+            color: white;
+            padding: 0.3rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            z-index: 1;
+        }
+
+
+
+        @media (max-width: 768px) {
+            .menu-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .item-image {
+                width: 100%;
+                height: 200px;
+                margin-bottom: 1rem;
+            }
+
+            .item-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+
+            .item-price {
+                align-self: flex-end;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="header-content">
+            <h1>DAKSHIN FOODS</h1>
+            <!-- <h4>Monday</h4> -->
+            <p class="date" id="current-date"></p>
+            <p>Today's Special Menu</p>
+        </div>
+    </header>
+
+    <div class="hero">
+        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/8f50e0af-76b2-4dbe-adc2-c51e77a0238f.png"
+            alt="Elegant restaurant dining room with beautifully set tables, soft lighting, and modern decor" />
+        <div class="hero-text">
+            <h2>Seasonal Flavors, Timeless Taste</h2>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="menu-category">
+            <div class="category-header" onclick="toggleCategory(this)">
+                <h2>Starters</h2>
+                <span class="category-icon">▼</span>
+            </div>
+            <div class="category-content">
+                <div class="menu-item">
+                    <div class="item-image">
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/4dacb572-2180-4126-91b4-1adf6853eb19.png"
+                            alt="Crispy calamari with lemon wheels and garlic aioli in a white bowl" />
+                    </div>
+                    <div class="item-details">
+                        <div class="item-header">
+                            <span class="item-name">Crispy Calamari</span>
+                            <span class="item-price">$12</span>
+                        </div>
+                        <p class="item-description">Lightly fried squid served with lemon wheels and our signature
+                            garlic aioli.</p>
+                        <div class="item-tags">
+                            <span class="tag">Seafood</span>
+                            <span class="tag">Fried</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="menu-item">
+                    <div class="item-image">
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/023de4bb-3967-4aca-8110-e437fa822375.png"
+                            alt="Colorful heirloom tomato and fresh mozzarella salad with basil leaves" />
+                    </div>
+                    <div class="item-details">
+                        <div class="item-header">
+                            <span class="item-name">Caprese Salad</span>
+                            <span class="item-price">$10</span>
+                        </div>
+                        <p class="item-description">Heirloom tomatoes, fresh mozzarella, and basil drizzled with aged
+                            balsamic.</p>
+                        <div class="item-tags">
+                            <span class="tag">Vegetarian</span>
+                            <span class="tag">Gluten Free</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="menu-item special">
+                    <div class="special-badge">Chef's Pick</div>
+                    <div class="item-image">
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/8abb844f-a907-4170-91f1-3caba591e922.png"
+                            alt="Golden brown crab cakes with mango salsa and microgreens garnish" />
+                    </div>
+                    <div class="item-details">
+                        <div class="item-header">
+                            <span class="item-name">Lump Crab Cakes</span>
+                            <span class="item-price">$15</span>
+                        </div>
+                        <p class="item-description">Jumbo lump crab meat cakes with our house seasoning, served with
+                            mango salsa.</p>
+                        <div class="item-tags">
+                            <span class="tag">Seafood</span>
+                            <span class="tag">Gluten Free</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="menu-category">
+            <div class="category-header" onclick="toggleCategory(this)">
+                <h2>Main Courses</h2>
+                <span class="category-icon">▼</span>
+            </div>
+            <div class="category-content">
+                <div class="menu-item">
+                    <div class="item-image">
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/57e68454-f993-4980-ac5f-277607227106.png"
+                            alt="Perfectly grilled salmon fillet with asparagus and lemon butter sauce" />
+                    </div>
+                    <div class="item-details">
+                        <div class="item-header">
+                            <span class="item-name">Grilled Salmon</span>
+                            <span class="item-price">$24</span>
+                        </div>
+                        <p class="item-description">Wild-caught salmon with lemon butter sauce, served with roasted
+                            vegetables.</p>
+                        <div class="item-tags">
+                            <span class="tag">Seafood</span>
+                            <span class="tag">Healthy</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="menu-item special">
+                    <div class="special-badge">Special</div>
+                    <div class="item-image">
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/fb452f55-f2d4-422b-9bd7-f7975a0b8259.png"
+                            alt="Juicy ribeye steak with red wine reduction and garlic mashed potatoes" />
+                    </div>
+                    <div class="item-details">
+                        <div class="item-header">
+                            <span class="item-name">Dry Aged Ribeye</span>
+                            <span class="item-price">$38</span>
+                        </div>
+                        <p class="item-description">16oz dry-aged ribeye with red wine reduction, garlic mash, and
+                            seasonal greens.</p>
+                        <div class="item-tags">
+                            <span class="tag">Beef</span>
+                            <span class="tag">Premium</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="menu-item">
+                    <div class="item-image">
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/94e94130-44b1-4fa2-ab56-4265d7f37621.png"
+                            alt="Colorful vegetable risotto with parmesan shavings and fresh herbs" />
+                    </div>
+                    <div class="item-details">
+                        <div class="item-header">
+                            <span class="item-name">Mushroom Risotto</span>
+                            <span class="item-price">$18</span>
+                        </div>
+                        <p class="item-description">Creamy arborio rice with wild mushrooms, white wine, and parmesan.
+                        </p>
+                        <div class="item-tags">
+                            <span class="tag">Vegetarian</span>
+                            <span class="tag">Comfort Food</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="menu-category">
+            <div class="category-header" onclick="toggleCategory(this)">
+                <h2>Desserts</h2>
+                <span class="category-icon">▼</span>
+            </div>
+            <div class="category-content">
+                <div class="menu-item">
+                    <div class="item-image">
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/71e6d496-61fc-4b19-ae47-55900dd7fda1.png"
+                            alt="Rich chocolate lava cake with vanilla bean ice cream and berry garnish" />
+                    </div>
+                    <div class="item-details">
+                        <div class="item-header">
+                            <span class="item-name">Chocolate Lava Cake</span>
+                            <span class="item-price">$9</span>
+                        </div>
+                        <p class="item-description">Warm chocolate cake with a molten center, served with vanilla bean
+                            ice cream.</p>
+                        <div class="item-tags">
+                            <span class="tag">Chocolate</span>
+                            <span class="tag">Sweet</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="menu-item">
+                    <div class="item-image">
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/26978f92-8086-4e37-b511-5046d694377e.png"
+                            alt="Creamy vanilla bean crème brûlée with caramelized sugar crust" />
+                    </div>
+                    <div class="item-details">
+                        <div class="item-header">
+                            <span class="item-name">Crème Brûlée</span>
+                            <span class="item-price">$8</span>
+                        </div>
+                        <p class="item-description">Classic vanilla custard with a crisp caramelized sugar topping.</p>
+                        <div class="item-tags">
+                            <span class="tag">Classic</span>
+                            <span class="tag">Gluten Free</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="menu-category">
+            <div class="category-header" onclick="toggleCategory(this)">
+                <h2>Drinks</h2>
+                <span class="category-icon">▼</span>
+            </div>
+            <div class="category-content">
+                <div class="menu-item">
+                    <div class="item-image">
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/8a339136-ee8c-4458-ba6a-d2bedf46611d.png"
+                            alt="Refreshing mojito cocktail with mint leaves and lime in a tall glass" />
+                    </div>
+                    <div class="item-details">
+                        <div class="item-header">
+                            <span class="item-name">Classic Mojito</span>
+                            <span class="item-price">$11</span>
+                        </div>
+                        <p class="item-description">White rum, fresh lime, mint, and soda water.</p>
+                        <div class="item-tags">
+                            <span class="tag">Cocktail</span>
+                            <span class="tag">Refreshing</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="menu-item">
+                    <div class="item-image">
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/038e6ff8-506f-4cb1-bb29-d028ad20a24d.png"
+                            alt="Artfully poured red wine in a large bowl glass" />
+                    </div>
+                    <div class="item-details">
+                        <div class="item-header">
+                            <span class="item-name">House Red Wine</span>
+                            <span class="item-price">$9/glass</span>
+                        </div>
+                        <p class="item-description">Our sommelier's selection of Cabernet Sauvignon, California.</p>
+                        <div class="item-tags">
+                            <span class="tag">Wine</span>
+                            <span class="tag">Red</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="menu-item">
+                    <div class="item-image">
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/8cbeee81-ea4b-4835-b349-e2efe444ae51.png"
+                            alt="Iced lemonade in a mason jar with mint garnish and condensation" />
+                    </div>
+                    <div class="item-details">
+                        <div class="item-header">
+                            <span class="item-name">Fresh Lemonade</span>
+                            <span class="item-price">$5</span>
+                        </div>
+                        <p class="item-description">Hand-squeezed lemonade with a hint of mint.</p>
+                        <div class="item-tags">
+                            <span class="tag">Non-Alcoholic</span>
+                            <span class="tag">Refreshing</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        // Set current date
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        const today = new Date();
+        document.getElementById('current-date').textContent = today.toLocaleDateString('en-US', options);
+
+        // Toggle menu categories
+        function toggleCategory(header) {
+            const content = header.nextElementSibling;
+            const icon = header.querySelector('.category-icon');
+
+            content.classList.toggle('collapsed');
+            icon.textContent = content.classList.contains('collapsed') ? '►' : '▼';
+        }
+
+        // Initially collapse all categories except the first one
+        document.addEventListener('DOMContentLoaded', function () {
+            const categories = document.querySelectorAll('.menu-category:not(:first-child) .category-content');
+            categories.forEach(category => {
+                category.classList.add('collapsed');
+                category.previousElementSibling.querySelector('.category-icon').textContent = '►';
+            });
+        });
+    </script>
+</body>
+
+</html>

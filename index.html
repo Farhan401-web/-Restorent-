@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Splash Screen</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-size: 300% 300%;
+        }
+        
+        .splash-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            animation: gradientShift 8s ease infinite;
+        }
+        
+        .brand-name {
+            font-size: 3.5rem;
+            font-weight: 600;
+            color: white;
+            position: relative;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.5rem;
+            text-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .brand-name:hover {
+            transform: scale(1.05);
+            text-shadow: 0 15px 30px rgba(0,0,0,0.3);
+        }
+        
+        .brand-name::before {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 5px;
+            bottom: -10px;
+            left: 0;
+            background-color: rgba(255,255,255,0.8);
+            transition: width 0.5s ease;
+            border-radius: 5px;
+        }
+        
+        .brand-name:hover::before {
+            width: 100%;
+        }
+        
+        @keyframes gradientShift {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+        
+        .cursor {
+            display: inline-block;
+            width: 10px;
+            height: 5rem;
+            background-color: white;
+            margin-left: 5px;
+            animation: blink 0.8s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0;
+            }
+        }
+        
+        .transition-effect {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: white;
+            z-index: 1000;
+            transform: scale(0);
+            border-radius: 50%;
+            transition: transform 1s ease-in-out;
+            pointer-events: none;
+        }
+        
+        .active {
+            transform: scale(2);
+        }
+    </style>
+</head>
+<body>
+    <div class="transition-effect"></div>
+    <div class="splash-container">
+        <h1 class="brand-name">DAKSHIN<span class="cursor"></span></h1>
+    </div>
+
+    <script>
+        // Auto-redirect after 3 seconds
+        setTimeout(() => {
+            document.querySelector('.transition-effect').classList.add('active');
+            setTimeout(() => {
+                window.location.href = 'dakshin foods.html';
+            }, 1000);
+        }, 3000);
+        
+        // Animation for brand name letters
+        const brandName = document.querySelector('.brand-name');
+        const letters = brandName.textContent.split('');
+        brandName.innerHTML = '';
+        
+        letters.forEach((letter, i) => {
+            const span = document.createElement('span');
+            span.textContent = letter;
+            span.style.display = 'inline-block';
+            span.style.opacity = '0';
+            span.style.transform = 'translateY(20px)';
+            span.style.transition = `all 0.3s ${i * 0.05}s ease`;
+            brandName.appendChild(span);
+            
+            // Apply animation with delay for each letter
+            setTimeout(() => {
+                span.style.opacity = '1';
+                span.style.transform = 'translateY(0)';
+            }, i * 100);
+        });
+        
+        // Hover effects
+        brandName.addEventListener('mouseenter', () => {
+            const spans = brandName.querySelectorAll('span');
+            spans.forEach((span, i) => {
+                setTimeout(() => {
+                    span.style.transform = 'translateY(-5px) rotate(2deg)';
+                }, i * 30);
+            });
+        });
+        
+        brandName.addEventListener('mouseleave', () => {
+            const spans = brandName.querySelectorAll('span');
+            spans.forEach((span, i) => {
+                setTimeout(() => {
+                    span.style.transform = 'translateY(0) rotate(0)';
+                }, i * 30);
+            });
+        });
+    </script>
+</body>
+</html>
